@@ -16,19 +16,19 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start; /* 从顶部开始排列 */
+      justify-content: flex-start;
       min-height: 100vh;
       padding: 20px;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); /* 渐变背景 */
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       color: #333;
     }
 
     .container {
       width: 100%;
       max-width: 500px;
-      background-color: rgba(255, 255, 255, 0.95); /* 半透明白色背景 */
+      background-color: rgba(255, 255, 255, 0.95);
       border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); /* 更强的阴影 */
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
       padding: 30px;
       box-sizing: border-box;
       text-align: center;
@@ -44,6 +44,55 @@
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 文字阴影 */
     }
 
+    /* 每日一句区域 */
+    #quoteDisplay {
+      font-size: 18px; /* 句子字体大小 */
+      line-height: 1.6; /* 行高 */
+      color: #2c3e50; /* 句子颜色 */
+      margin: 0 auto 25px; /* 上下外边距，居中 */
+      padding: 18px; /* 内边距 */
+      background-color: rgba(248, 249, 250, 0.7); /* 淡灰色背景 */
+      border-radius: 10px;
+      border-left: 4px solid #3498db; /* 左侧高亮条 */
+      text-align: center;
+      min-height: 80px; /* 预留空间 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease, transform 0.5s ease; /* 添加过渡效果 */
+      max-width: 100%; /* 防止溢出 */
+      word-wrap: break-word; /* 长句子自动换行 */
+    }
+
+    #quoteDisplay.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    #quoteDisplay.hiding {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    #quoteButton {
+      padding: 10px 24px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #3498db;
+      background-color: transparent;
+      border: 1px solid #3498db;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 25px; /* 与下方元素间距 */
+      transition: all 0.3s ease;
+    }
+
+    #quoteButton:hover {
+      background-color: #3498db;
+      color: white;
+    }
+
+    /* 原有的选择器样式 */
     #optionsInput {
       width: 100%;
       padding: 16px 20px; /* 更大内边距 */
@@ -66,8 +115,8 @@
       color: #adb5bd; /* 占位符颜色 */
     }
 
-    button {
-      margin-top: 24px; /* 按钮上留更多空间 */
+    button#chooseButton { /* 特指选择按钮 */
+      margin-top: 20px; /* 按钮上留更多空间 */
       padding: 14px 36px; /* 更大按钮 */
       font-size: 17px;
       font-weight: 500;
@@ -82,49 +131,19 @@
       overflow: hidden; /* 隐藏内部动画效果溢出 */
     }
 
-    button:hover {
+    button#chooseButton:hover {
       background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%); /* 悬停渐变 */
       box-shadow: 0 6px 16px rgba(24, 144, 255, 0.4); /* 悬停阴影 */
     }
 
-    button:active {
+    button#chooseButton:active {
       transform: translateY(2px) scale(0.98); /* 点击时下沉并轻微缩小 */
       box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3); /* 点击时阴影变浅 */
     }
 
-    button::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 5px;
-      height: 5px;
-      background: rgba(255, 255, 255, 0.5);
-      opacity: 0;
-      border-radius: 100%;
-      transform: scale(1, 1) translate(-50%);
-      transform-origin: 50% 50%;
-    }
-
-    button:focus:not(:active)::after {
-      animation: ripple 1s ease-out;
-    }
-
-    @keyframes ripple {
-      0% {
-        transform: scale(0, 0);
-        opacity: 1;
-      }
-      100% {
-        transform: scale(20, 20);
-        opacity: 0;
-      }
-    }
-
-
     #resultContainer {
-      margin-top: 30px;
-      min-height: 80px; /* 预留更多空间 */
+      margin-top: 25px;
+      min-height: 80px; 
       display: flex;
       align-items: center;
       justify-content: center;
@@ -134,16 +153,16 @@
       font-size: 22px; /* 结果字体稍大 */
       font-weight: bold;
       color: #52c41a; /* 绿色 */
-      opacity: 0; /* 初始隐藏 */
-      transform: translateY(20px) scale(0.95); /* 初始位置偏下并缩小 */
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
       transition: opacity 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); /* 更自然的缓动 */
       padding: 15px 25px;
       background-color: rgba(82, 196, 26, 0.1); /* 淡绿色背景 */
       border-radius: 10px;
-      border-left: 4px solid #52c41a; /* 左侧高亮条 */
+      border-left: 4px solid #52c41a; 
       text-align: center;
       max-width: 100%; /* 防止文字溢出 */
-      word-wrap: break-word; /* 长选项自动换行 */
+      word-wrap: break-word; 
     }
 
     #result.show {
@@ -175,7 +194,17 @@
         font-size: 24px;
       }
 
-      #optionsInput, button {
+      #quoteDisplay {
+        font-size: 16px; /* 移动端句子稍小 */
+        min-height: 100px; /* 预留更多空间 */
+        padding: 15px;
+      }
+
+      #quoteButton {
+        font-size: 14px;
+      }
+
+      #optionsInput, button#chooseButton {
         font-size: 16px; /* 确保移动端文字清晰 */
       }
 
@@ -189,7 +218,11 @@
 <body>
   <div class="container">
     <h1>帮你做选择</h1>
-    <input type="text" id="optionsInput" placeholder="请输入选项，用中文逗号【，】分隔">
+   
+    <div id="quoteDisplay">加载中...</div>
+    <button id="quoteButton">换一句</button>
+   
+    <input type="text" id="optionsInput" placeholder="来输入纠结的选项吧，用中文逗号【，】分隔">
     <button id="chooseButton">帮你做选择</button>
     <div id="resultContainer">
       <div id="result"></div>
@@ -198,56 +231,115 @@
   </div>
 
   <script>
+    // 句子库
+    const quotes = [
+      "生活就像骑自行车，想保持平衡就得往前走。",
+      "成功不是终点，失败不是致命的，继续前进的勇气才是最重要的。",
+      "愿你眼里的星星，温柔泛滥，人间至善。",
+      "不要等待机会，而要创造机会。",
+      "所有的胜利，都是有备而来。",
+      "路漫漫其修远兮，吾将上下而求索。",
+      "今天能做的事，绝不拖到明天。",
+      "只有在人群中间，才能认识自己。",
+      "种一棵树最好的时间是十年前，其次是现在。",
+      "快乐不是因为得到的多，而是计较的少。",
+      "你并非孤身一人。", 
+      "如果你觉得你已经堕落了，不要怕，因为树倒了还能当柴烧。",
+      "你比自己想象中更强大。",
+      "不一定每天都很好，但每天都会有些小美好在等你。",
+      "你不一定非得长成玫瑰，你乐意的话，做茉莉，做雏菊，做无名小花，做千千万万。",
+      "我懂你的不易。",
+      "失败是成功之母，那成功是什么？",
+      "今天你已经很努力了，给自己放个小假吧！", 
+      "你值得所有美好，不是因为完美，而是因为你真实又勇敢。",
+      "在我眼里，你本身就散发着光芒，所以不要害怕前方的阴影。",
+      "别急，慢慢来。",
+      "世界或许会质疑你，但我知道——你就是那个能改变一切的人。",
+      "你所经历的每一次挫折，都是通往梦想的垫脚石。",
+      "你生来就值得被爱，也值得拥有最好的一切。",
+      "你身体里住着一个了不起的自己，现在，是时候让她出来大放异彩了。",
+      "前方虽长，可路旁有花，天上有星。",
+      "世事皆有裂痕，那是光照进来的地方。",
+      "今天的不开心就到此为止，明天依旧光芒万丈。",
+      "做自己的光，不需要太亮，足以挨过寒冬和黑夜就好。",
+      "累了的话，就歇一歇，和今天的夕阳说声再见。",
+      "天赋可以让一个人闪闪发光，但努力也能。",
+      "愿你遍历山河，觉得人间值得。",
+      "别人的看法只是风，你的心才是锚。",
+      "坏日子总有尽头，但你先得把今天走过去。",
+      "你柔软的肩膀，承载过许多坚强，现在可以休息一下了。"
+    ];
+
+    const quoteDisplay = document.getElementById('quoteDisplay');
+    const quoteButton = document.getElementById('quoteButton');
     const input = document.getElementById('optionsInput');
-    const button = document.getElementById('chooseButton');
+    const chooseButton = document.getElementById('chooseButton');
     const resultDiv = document.getElementById('result');
     const errorDiv = document.getElementById('error');
 
-    button.addEventListener('click', () => {
-      const inputValue = input.value.trim();
+    // 获取随机句子
+    function getRandomQuote() {
+      return quotes[Math.floor(Math.random() * quotes.length)];
+    }
 
+    function displayQuote(quote) {
+        quoteDisplay.classList.add('hiding');
+        quoteDisplay.classList.remove('show');
+        setTimeout(() => {
+            quoteDisplay.textContent = quote;
+            quoteDisplay.classList.remove('hiding');
+            quoteDisplay.classList.add('show');
+        }, 300);
+    }
+
+    window.onload = function() {
+        displayQuote(getRandomQuote());
+    };
+    
+    quoteButton.addEventListener('click', () => {
+        displayQuote(getRandomQuote());
+    });
+
+    chooseButton.addEventListener('click', () => {
+      const inputValue = input.value.trim();
       errorDiv.classList.remove('show');
       resultDiv.classList.remove('show');
 
       if (!inputValue) {
-        showError('哇塞，没有选项的话，我也没辙了呀');
+        showError('没有选项的话我也没辙啦！');
         return;
       }
 
       const options = inputValue.split('，').map(opt => opt.trim()).filter(opt => opt.length > 0);
 
       if (options.length < 2) {
-        showError('嘿嘿嘿，只有一个选项还需要我帮你选嘛！');
+        showError('黑黑黑，一个选项还要我帮你选嘛');
         return;
       }
-      button.disabled = true; 
-      button.textContent = '选择中...'; 
+
+      chooseButton.disabled = true;
+      chooseButton.textContent = '思考中...';
 
       setTimeout(() => {
         const randomIndex = Math.floor(Math.random() * options.length);
         const chosenOption = options[randomIndex];
-
-        
-        resultDiv.textContent = chosenOption;
-        resultDiv.style.color = '#52c41a'; 
-        resultDiv.style.borderLeftColor = '#52c41a'; 
+        resultDiv.textContent = `帮你选好啦：${chosenOption}`;
+        resultDiv.style.color = '#52c41a';
+        resultDiv.style.borderLeftColor = '#52c41a';
         resultDiv.classList.add('show');
-
-        
-        button.disabled = false;
-        button.textContent = '帮你做选择';
-      }, 500); 
+        chooseButton.disabled = false;
+        chooseButton.textContent = '帮你做选择';
+      }, 500);
     });
 
     function showError(message) {
       errorDiv.textContent = message;
       errorDiv.classList.add('show');
       errorDiv.style.animation = 'shake 0.5s';
-      setTimeout(() => {
-          errorDiv.style.animation = '';
-      }, 500);
+      setTimeout(() => { errorDiv.style.animation = ''; }, 500);
     }
 
+    // 错误提示抖动动画
     const style = document.createElement('style');
     style.textContent = `
       @keyframes shake {
