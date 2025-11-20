@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>帮你做选择</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #f0f2f5;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    h1 {
+      color: #1890ff;
+      margin-bottom: 24px;
+      font-size: 24px;
+    }
+
+    #optionsInput {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border: 2px solid #d9d9d9;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+
+    #optionsInput:focus {
+      outline: none;
+      border-color: #40a9ff;
+      box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 32px;
+      font-size: 16px;
+      color: white;
+      background-color: #1890ff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.1s;
+    }
+
+    button:hover {
+      background-color: #40a9ff;
+    }
+
+    button:active {
+      transform: scale(0.98); /* 点击时轻微缩小，增加反馈 */
+    }
+
+    #resultContainer {
+      margin-top: 30px;
+      min-height: 60px; /* 预留空间，防止布局跳动 */
+    }
+
+    #result {
+      font-size: 20px;
+      font-weight: bold;
+      color: #52c41a; /* 绿色，表示选中 */
+      opacity: 0; /* 初始隐藏 */
+      transform: scale(0.9); /* 初始缩小 */
+      transition: opacity 0.5s ease, transform 0.5s ease; /* 平滑过渡 */
+    }
+
+    #result.show {
+      opacity: 1; /* 显示 */
+      transform: scale(1); /* 恢复原大小 */
+    }
+
+    .error {
+      color: #ff4d4f;
+      font-size: 14px;
+      margin-top: 10px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .error.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>帮你做选择</h1>
+    <input type="text" id="optionsInput" placeholder="请输入选项，用中文逗号【，】分隔，例如：火锅，烧烤，日料">
+    <button id="chooseButton">帮你做选择</button>
+    <div id="resultContainer">
+      <div id="result"></div>
+      <div id="error" class="error"></div>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById('optionsInput');
+    const button = document.getElementById('chooseButton');
+    const resultDiv = document.getElementById('result');
+    const errorDiv = document.getElementById('error');
+
+    button.addEventListener('click', () => {
+      const inputValue = input.value.trim();
+
+      // 隐藏之前的错误和结果
+      errorDiv.classList.remove('show');
+      resultDiv.classList.remove('show');
+
+      if (!inputValue) {
+        showError('请输入选项！');
+        return;
+      }
+
+      // 按中文逗号分割
+      const options = inputValue.split('，').map(opt => opt.trim()).filter(opt => opt.length > 0);
+
+      if (options.length < 2) {
+        showError('请至少输入两个用中文逗号分隔的选项！');
+        return;
+      }
+
+      // 随机选择
+      const randomIndex = Math.floor(Math.random() * options.length);
+      const chosenOption = options[randomIndex];
+
+      // 显示结果并触发动画
+      resultDiv.textContent = `帮你选好了：${chosenOption}`;
+      // 短暂延迟后触发动画，确保 DOM 更新
+      setTimeout(() => {
+        resultDiv.classList.add('show');
+      }, 10); // 10ms 延迟通常足够
+    });
+
+    function showError(message) {
+      errorDiv.textContent = message;
+      errorDiv.classList.add('show');
+    }
+  </script>
+</body>
+</html>
