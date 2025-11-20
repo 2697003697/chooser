@@ -106,7 +106,7 @@
 <body>
   <div class="container">
     <h1>帮你做选择</h1>
-    <input type="text" id="optionsInput" placeholder="请输入选项，用中文逗号【，】分隔，例如：火锅，烧烤，日料">
+    <input type="text" id="optionsInput" placeholder="请输入选项，用中文逗号【，】分隔，例如：火锅，烧烤，快餐">
     <button id="chooseButton">帮你做选择</button>
     <div id="resultContainer">
       <div id="result"></div>
@@ -136,7 +136,7 @@
       const options = inputValue.split('，').map(opt => opt.trim()).filter(opt => opt.length > 0);
 
       if (options.length < 2) {
-        showError('请至少输入两个用中文逗号分隔的选项！');
+        showError('黑黑，你至少得输入两个用中文逗号分隔的选项哦');
         return;
       }
 
@@ -149,7 +149,7 @@
       // 短暂延迟后触发动画，确保 DOM 更新
       setTimeout(() => {
         resultDiv.classList.add('show');
-      }, 10); // 10ms 延迟通常足够
+      }, 10); 
     });
 
     function showError(message) {
@@ -158,4 +158,5 @@
     }
   </script>
 </body>
+
 </html>
