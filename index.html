@@ -5,108 +5,191 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>帮你做选择</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start; /* 从顶部开始排列 */
       min-height: 100vh;
-      margin: 0;
-      background-color: #f0f2f5;
       padding: 20px;
-      box-sizing: border-box;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); /* 渐变背景 */
+      color: #333;
     }
 
     .container {
       width: 100%;
       max-width: 500px;
-      background-color: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      background-color: rgba(255, 255, 255, 0.95); /* 半透明白色背景 */
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); /* 更强的阴影 */
       padding: 30px;
       box-sizing: border-box;
       text-align: center;
+      margin-top: 20px; /* 与顶部保持距离 */
     }
 
     h1 {
       color: #1890ff;
       margin-bottom: 24px;
-      font-size: 24px;
+      font-size: 28px; /* 稍大 */
+      font-weight: 600; /* 稍重 */
+      letter-spacing: 1px; /* 字间距 */
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 文字阴影 */
     }
 
     #optionsInput {
       width: 100%;
-      padding: 14px;
+      padding: 16px 20px; /* 更大内边距 */
       font-size: 16px;
-      border: 2px solid #d9d9d9;
-      border-radius: 8px;
+      border: 2px solid #e1e8ed;
+      border-radius: 12px; /* 更圆润 */
       box-sizing: border-box;
-      transition: border-color 0.3s;
+      transition: all 0.3s ease; /* 平滑过渡 */
+      background-color: #fafafa; /* 浅灰色背景 */
     }
 
     #optionsInput:focus {
       outline: none;
       border-color: #40a9ff;
-      box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+      box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.2); /* 更明显的焦点光晕 */
+      background-color: white; /* 聚焦时变白 */
+    }
+
+    #optionsInput::placeholder {
+      color: #adb5bd; /* 占位符颜色 */
     }
 
     button {
-      margin-top: 20px;
-      padding: 12px 32px;
-      font-size: 16px;
+      margin-top: 24px; /* 按钮上留更多空间 */
+      padding: 14px 36px; /* 更大按钮 */
+      font-size: 17px;
+      font-weight: 500;
       color: white;
-      background-color: #1890ff;
+      background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%); /* 渐变按钮 */
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: background-color 0.3s, transform 0.1s;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* 更自然的缓动 */
+      box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3); /* 按钮阴影 */
+      position: relative;
+      overflow: hidden; /* 隐藏内部动画效果溢出 */
     }
 
     button:hover {
-      background-color: #40a9ff;
+      background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%); /* 悬停渐变 */
+      box-shadow: 0 6px 16px rgba(24, 144, 255, 0.4); /* 悬停阴影 */
     }
 
     button:active {
-      transform: scale(0.98); /* 点击时轻微缩小，增加反馈 */
+      transform: translateY(2px) scale(0.98); /* 点击时下沉并轻微缩小 */
+      box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3); /* 点击时阴影变浅 */
     }
+
+    button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%);
+      transform-origin: 50% 50%;
+    }
+
+    button:focus:not(:active)::after {
+      animation: ripple 1s ease-out;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0, 0);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(20, 20);
+        opacity: 0;
+      }
+    }
+
 
     #resultContainer {
       margin-top: 30px;
-      min-height: 60px; /* 预留空间，防止布局跳动 */
+      min-height: 80px; /* 预留更多空间 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     #result {
-      font-size: 20px;
+      font-size: 22px; /* 结果字体稍大 */
       font-weight: bold;
-      color: #52c41a; /* 绿色，表示选中 */
+      color: #52c41a; /* 绿色 */
       opacity: 0; /* 初始隐藏 */
-      transform: scale(0.9); /* 初始缩小 */
-      transition: opacity 0.5s ease, transform 0.5s ease; /* 平滑过渡 */
+      transform: translateY(20px) scale(0.95); /* 初始位置偏下并缩小 */
+      transition: opacity 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); /* 更自然的缓动 */
+      padding: 15px 25px;
+      background-color: rgba(82, 196, 26, 0.1); /* 淡绿色背景 */
+      border-radius: 10px;
+      border-left: 4px solid #52c41a; /* 左侧高亮条 */
+      text-align: center;
+      max-width: 100%; /* 防止文字溢出 */
+      word-wrap: break-word; /* 长选项自动换行 */
     }
 
     #result.show {
       opacity: 1; /* 显示 */
-      transform: scale(1); /* 恢复原大小 */
+      transform: translateY(0) scale(1); /* 回到原位并恢复大小 */
     }
 
     .error {
       color: #ff4d4f;
       font-size: 14px;
-      margin-top: 10px;
+      margin-top: 12px;
       opacity: 0;
-      transition: opacity 0.3s;
+      transition: opacity 0.3s ease;
+      text-align: center;
     }
 
     .error.show {
       opacity: 1;
+    }
+
+    /* 移动端优化 */
+    @media (max-width: 768px) {
+      .container {
+        padding: 24px 20px; /* 移动端紧凑一些 */
+        margin-top: 10px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      #optionsInput, button {
+        font-size: 16px; /* 确保移动端文字清晰 */
+      }
+
+      #result {
+        font-size: 20px; /* 移动端结果稍小 */
+        padding: 12px 20px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>帮你做选择</h1>
-    <input type="text" id="optionsInput" placeholder="请输入选项，用中文逗号【，】分隔，例如：火锅，烧烤，快餐">
+    <input type="text" id="optionsInput" placeholder="请输入选项，用中文逗号【，】分隔">
     <button id="chooseButton">帮你做选择</button>
     <div id="resultContainer">
       <div id="result"></div>
@@ -123,40 +206,57 @@
     button.addEventListener('click', () => {
       const inputValue = input.value.trim();
 
-      // 隐藏之前的错误和结果
       errorDiv.classList.remove('show');
       resultDiv.classList.remove('show');
 
       if (!inputValue) {
-        showError('请输入选项！');
+        showError('哇塞，没有选项的话，我也没辙了呀');
         return;
       }
 
-      // 按中文逗号分割
       const options = inputValue.split('，').map(opt => opt.trim()).filter(opt => opt.length > 0);
 
       if (options.length < 2) {
-        showError('黑黑，你至少得输入两个用中文逗号分隔的选项哦');
+        showError('嘿嘿嘿，只有一个选项还需要我帮你选嘛！');
         return;
       }
+      button.disabled = true; 
+      button.textContent = '选择中...'; 
 
-      // 随机选择
-      const randomIndex = Math.floor(Math.random() * options.length);
-      const chosenOption = options[randomIndex];
-
-      // 显示结果并触发动画
-      resultDiv.textContent = `帮你选好了：${chosenOption}`;
-      // 短暂延迟后触发动画，确保 DOM 更新
       setTimeout(() => {
+        const randomIndex = Math.floor(Math.random() * options.length);
+        const chosenOption = options[randomIndex];
+
+        
+        resultDiv.textContent = chosenOption;
+        resultDiv.style.color = '#52c41a'; 
+        resultDiv.style.borderLeftColor = '#52c41a'; 
         resultDiv.classList.add('show');
-      }, 10); 
+
+        
+        button.disabled = false;
+        button.textContent = '帮你做选择';
+      }, 500); 
     });
 
     function showError(message) {
       errorDiv.textContent = message;
       errorDiv.classList.add('show');
+      errorDiv.style.animation = 'shake 0.5s';
+      setTimeout(() => {
+          errorDiv.style.animation = '';
+      }, 500);
     }
+
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-5px); }
+        40%, 80% { transform: translateX(5px); }
+      }
+    `;
+    document.head.appendChild(style);
   </script>
 </body>
-
 </html>
